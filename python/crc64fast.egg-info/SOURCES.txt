@@ -1,9 +1,0 @@
-Cargo.toml
-MANIFEST.in
-pyproject.toml
-python/crc64fast/__init__.py
-python/crc64fast.egg-info/PKG-INFO
-python/crc64fast.egg-info/SOURCES.txt
-python/crc64fast.egg-info/dependency_links.txt
-python/crc64fast.egg-info/top_level.txt
-rust/lib.rs
