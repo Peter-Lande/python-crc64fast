@@ -1,1 +1,4 @@
 /target
+/python/crc64fast.egg-info/
+/python/crc64fast/__pycache__/**
+/python/crc64fast/_lib*
