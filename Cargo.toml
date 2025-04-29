@@ -1,0 +1,14 @@
+[package]
+name = "crc64fast"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crc64fast-nvme = "1.2.0"
+pyo3 = "0.24"
+
+[lib]
+# See https://github.com/PyO3/pyo3 for details
+name = "_lib"  # private module to be nested into Python package
+crate-type = ["cdylib"]
+path = "rust/lib.rs"

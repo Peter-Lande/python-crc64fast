@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools", "setuptools-rust"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crc64fast"
+version = "0.1.0"
+authors = [
+  { name="Peter Lande", email="petelande@me.com" },
+]
+description = "Python bindings for crc64fast-nvme Rust library"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Rust",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "License :: OSI Approved :: Apache Software License",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+license = "MIT OR Apache-2.0"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/Peter-Lande/python-crc64fast"
+Issues = "https://github.com/Peter-Lande/python-crc64fast/issues"
+
+[tool.setuptools.packages]
+# Pure Python packages/modules
+find = { where = ["python"] }
+
+[[tool.setuptools-rust.ext-modules]]
+# Private Rust extension module to be nested into Python package
+target = "crc64fast._lib"  
