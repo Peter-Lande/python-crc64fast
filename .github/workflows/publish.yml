@@ -37,6 +37,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
+    needs: build
     environment: pypi
     steps:
       - name: Download from GitHub
