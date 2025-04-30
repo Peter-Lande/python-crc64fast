@@ -16,8 +16,6 @@ classifiers = [
     "Programming Language :: Rust",
     "Operating System :: MacOS",
     "Operating System :: POSIX :: Linux",
-    "License :: OSI Approved :: Apache Software License",
-    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
