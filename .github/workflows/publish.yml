@@ -8,12 +8,11 @@ on:
       - "master"
 
 jobs:
-  build:
-    name: Build for version ${{ matrix.python_version }} on ${{ matrix.os }}
+  build_wheel:
+    name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python_version: ['3.9', '3.10', '3.11', '3.12', '3.13']
         os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
       - name: Checkout Repo
@@ -26,18 +25,38 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Build Package
-        run: uv build --python ${{ matrix.python_version }}
+        run: uvx cibuildwheel
 
       - name: Upload to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}-${{ matrix.python_version}}
-          path: ${{ github.workspace }}/dist
+          name: build-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ${{ github.workspace }}/wheelhouse/*.whl
+
+  build_source:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Download UV
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build Source
+        run: uv build --sdist
+
+      - name: Upload to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-sdist
+          path: dist/*.tar.gz
           
   publish:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
-    needs: build
+    needs: [ build_wheel, build_source ]
     environment: pypi
     permissions:
       id-token: write
@@ -45,6 +64,7 @@ jobs:
       - name: Download from GitHub
         uses: actions/download-artifact@v4
         with:
+          pattern: build-*
           path: ${{ github.workspace }}/dist
           merge-multiple: true
           
