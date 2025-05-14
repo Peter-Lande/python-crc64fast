@@ -18,9 +18,6 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Download Rust
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Download UV
         uses: astral-sh/setup-uv@v5
 
