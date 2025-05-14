@@ -34,11 +34,12 @@ find = { where = ["python"] }
 # Private Rust extension module to be nested into Python package
 target = "crc64fast._lib"  
 
-[tool.cibuildwheel.linux]
-before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+[tool.cibuildwheel]
+skip = ["*-musllinux_i686"]
 
-[tool.cibuildwheel.macos]
-before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+[tool.cibuildwheel.linux]
+before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y "
+environment = { PATH="$HOME/.cargo/bin:$PATH" }
 
 [tool.cibuildwheel.windows]
-before-all = "wget https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe && .\\rustup-init.exe -vy"
+before-all = "rustup target add i686-pc-windows-msvc"
