@@ -35,10 +35,10 @@ find = { where = ["python"] }
 target = "crc64fast._lib"  
 
 [tool.cibuildwheel.linux]
-before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
 
 [tool.cibuildwheel.macos]
-before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+before-all = "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
 
 [tool.cibuildwheel.windows]
 before-all = "wget https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-gnu/rustup-init.exe && .\\rustup-init.exe -vy"
