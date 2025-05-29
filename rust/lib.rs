@@ -1,24 +1,41 @@
 use pyo3::prelude::*;
-use crc64fast_nvme;
+use pyo3::types::PyDict;
 
 #[pymodule]
 mod _lib {
     use super::*;
 
-
     #[pyfunction]
-    fn crc64fast() -> Digest {
-        Digest::new()
+    #[pyo3(signature = (**py_kwargs))]
+    fn crc64fast(py_kwargs: Option<&Bound<'_, PyDict>>) -> Digest {
+        if py_kwargs.is_some_and(|kwargs| {
+            kwargs.get_item("table").is_ok_and(|value_res| {
+                value_res
+                    .is_some_and(|value_option| value_option.is_truthy().is_ok_and(|value| value))
+            })
+        }) {
+            Digest::new(true)
+        } else {
+            Digest::new(false)
+        }
     }
 
     #[pyclass]
     struct Digest {
-        inner: crc64fast_nvme::Digest, 
+        inner: crc64fast_nvme::Digest,
     }
-    
+
     impl Digest {
-        fn new() -> Self {
-            Digest { inner: crc64fast_nvme::Digest::new() }
+        fn new(table: bool) -> Self {
+            if table {
+                Digest {
+                    inner: crc64fast_nvme::Digest::new_table(),
+                }
+            } else {
+                Digest {
+                    inner: crc64fast_nvme::Digest::new(),
+                }
+            }
         }
     }
 
@@ -29,18 +46,18 @@ mod _lib {
         }
 
         #[getter(name)]
-        fn name(&self) -> &str {
-            return "crc64-fast"
+        fn name(&self) -> &'static str {
+            "crc64-fast"
         }
 
         #[getter(digest_size)]
         fn digest_size(&self) -> u8 {
-            return 8
+            8
         }
 
         #[getter(block_size)]
         fn block_size(&self) -> u8 {
-            return 1
+            1
         }
 
         fn digest(&self) -> Vec<u8> {
@@ -52,7 +69,9 @@ mod _lib {
         }
 
         fn copy(&self) -> Self {
-            Digest { inner: self.inner.clone() }
+            Digest {
+                inner: self.inner.clone(),
+            }
         }
     }
 }
