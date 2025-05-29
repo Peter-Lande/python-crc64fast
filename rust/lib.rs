@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use crc64fast_nvme;
+use pyo3::types::PyDict;
 
 #[pymodule]
 mod _lib {
@@ -7,8 +8,24 @@ mod _lib {
 
 
     #[pyfunction]
-    fn crc64fast() -> Digest {
-        Digest::new()
+    #[pyo3(signature = (**py_kwargs))]
+    fn crc64fast(py_kwargs: Option<&Bound<'_, PyDict>>) -> Digest {
+        if let Some(kwargs) = py_kwargs {
+            if let Ok(Some(value)) = kwargs.get_item("table") {
+                if value.is_truthy().is_ok_and(|x| x) {
+                    Digest::new(true)
+                }
+                else {
+                    Digest::new(false)
+                }
+            }
+            else {
+                Digest::new(false)
+            }
+        }
+        else {
+            Digest::new(false)
+        }
     }
 
     #[pyclass]
@@ -17,8 +34,13 @@ mod _lib {
     }
     
     impl Digest {
-        fn new() -> Self {
-            Digest { inner: crc64fast_nvme::Digest::new() }
+        fn new(table: bool) -> Self {
+            if table {
+                Digest { inner: crc64fast_nvme::Digest::new_table() }
+            }
+            else {
+                Digest { inner: crc64fast_nvme::Digest::new() }
+            }
         }
     }
 
