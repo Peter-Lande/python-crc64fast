@@ -57,6 +57,7 @@ jobs:
     environment: pypi
     permissions:
       id-token: write
+      contents: write
     steps:
       - name: Download from GitHub
         uses: actions/download-artifact@v4
